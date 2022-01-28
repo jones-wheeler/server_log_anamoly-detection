@@ -76,9 +76,6 @@ def get_curriculum_logs_data():
         # Read fresh data from db into a DataFrame
         df = acquire_data()
 
-        # prepare data
-        df = prepare_logs(df)
-
         # Cache data
         df.to_csv('curriculum_logs.csv')
 
@@ -86,6 +83,8 @@ def get_curriculum_logs_data():
         # print statements for size of each df
         print(f'The df has {df.shape[0]} rows and {df.shape[1]} columns.')
 
+    # prepare data
+    df = prepare_logs(df)
     
     return df
 
