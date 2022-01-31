@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 
 import os
+import json
+import requests
+import time
 import env
+from env import geo_key
 
 ####### Acquire #######
 def acquire_data():
@@ -88,6 +92,32 @@ def get_curriculum_logs_data():
     
     return df
 
+
+def get_ip_information(ip_address):
+    if os.path.isfile('ip.json'):
+        f = open('ip.json')
+        ip_result = json.load(f)
+
+
+    else:
+        # create empty dictionary to hold results
+        ip_result = {}
+        for ip in ip_address:
+            # request url
+            request_url = 'https://ipgeolocation.abstractapi.com/v1/?api_key=' + geo_key + '&ip_address=' + ip
+            # GET response
+            response = requests.get(request_url)
+            # Load response into result
+            result = json.loads(response.content)
+            # add result to dictionary
+            ip_result[ip] = result
+            # one second delay between loops, API requirement
+            time.sleep(1.01)
+        # write to ip.json    
+        with open('ip.json', 'w', encoding='utf-8') as f:
+            json.dump(ip_result, f, ensure_ascii=False, indent=4)
+    
+    return ip_result
 
 
 
